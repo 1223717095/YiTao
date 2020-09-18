@@ -1,0 +1,18 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyurjds.yitao.Mapper.TransactionRecordMapper">
+
+    <select id="getMyBoughtTransactionRecord" resultType="com.wyurjds.yitao.Entity.TransactionRecord">
+        SELECT *
+        FROM transaction_record
+        WHERE buyer_id=#{wxId}
+        AND transaction_status=1;
+    </select>
+    <insert id="addTransactionRecord">
+        INSERT INTO transaction_record
+        (product_id, seller_id, buyer_id, transaction_status)
+        VALUES
+        (#{productId},#{sellerId},#{buyerId},1);
+    </insert>
+</mapper>

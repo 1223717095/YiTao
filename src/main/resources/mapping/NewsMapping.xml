@@ -1,0 +1,55 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyurjds.yitao.Mapper.NewsMapper">
+
+    <!--SELECT DISTINCT product_id FROM news WHERE news_receiver_id="xh444444" OR news_sender_id="xh444444";-->
+    <select id="userGetAllProductId" resultType="Long">
+        SELECT DISTINCT product_id
+        FROM news
+        WHERE news_receiver_id=#{wxId}
+        OR news_sender_id=#{wxId};
+    </select>
+
+    <select id="buyerProductIdGetAllNews" resultType="com.wyurjds.yitao.Entity.News">
+        SELECT *
+        FROM news
+        WHERE product_id=#{productId} AND (news_sender_id=#{buyerId} OR news_receiver_id=#{buyerId})
+        ORDER BY news_send_out_date DESC;
+    </select>
+
+    <select id="senderProductIdGetOneNews" resultType="com.wyurjds.yitao.Entity.News">
+        SELECT *
+        FROM news
+        WHERE product_id=#{productId} AND (news_sender_id=#{senderId} OR news_receiver_id=#{senderId})
+        ORDER BY news_send_out_date DESC
+        limit 1;
+    </select>
+
+    <insert id="addOneNew" >
+        INSERT INTO news
+        (news_sender_id, news_receiver_id, news_contents, product_id)
+        VALUES
+        (#{sendMessageRequest.newsSenderId},#{sendMessageRequest.newsReceiverId},#{sendMessageRequest.newsContents},#{sendMessageRequest.productId})
+    </insert>
+
+    <select id="productIdGetsenderId" resultType="String">
+        SELECT  DISTINCT news_sender_id
+        FROM news
+        WHERE product_id=#{productId} AND news_sender_id!=#{sellerId}
+    </select>
+
+
+    <select id="productIdGetreceiverId" resultType="String">
+        SELECT  DISTINCT news_receiver_id
+        FROM news
+        WHERE product_id=#{productId} AND news_receiver_id!=#{sellerId}
+    </select>
+
+    <delete id="deleteMessage">
+        DELETE
+        FROM news
+        WHERE product_id=#{productId} AND (news_sender_id=#{buyerId} OR news_receiver_id=#{buyerId})
+    </delete>
+
+</mapper>

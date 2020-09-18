@@ -1,0 +1,18 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyurjds.yitao.Mapper.UserMapper">
+
+    <insert id="inserUser" parameterType="com.wyurjds.yitao.Entity.Users">
+        insert into users  (wechat_user_id,wechat_user_name,user_pic_url) values(#{wechatUserId},#{wechatUserName},#{userPic})
+    </insert>
+
+    <select id="queryUser" resultType="com.wyurjds.yitao.Entity.Users" parameterType="com.wyurjds.yitao.Entity.Users">
+        select * from users where wechat_user_id = #{wechatUserId}
+    </select>
+
+    <select id="userIdQueryUser" resultType="com.wyurjds.yitao.Entity.Users" parameterType="com.wyurjds.yitao.Entity.Users">
+        select * from users where wechat_user_id = #{wxId}
+    </select>
+
+</mapper>

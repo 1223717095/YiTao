@@ -1,0 +1,24 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyurjds.yitao.Mapper.CollectionMapper">
+
+    <select id="getMyCollection" resultType="com.wyurjds.yitao.Entity.Collection">
+        SELECT *
+        FROM collection
+        WHERE collector_id=#{wxId};
+    </select>
+    <!--添加收藏-->
+    <insert id="insertCollection" parameterType="com.wyurjds.yitao.Entity.Collection">
+        insert into collection (product_id,collector_id) values(#{productId},#{collectorId})
+    </insert>
+
+    <!--查询收藏-->
+    <delete id="deleteFromCollection">
+        delete from collection where product_id = #{productId} and collector_id = #{collectorId}
+    </delete>
+
+    <select id="queryCollectionStatus" resultType="com.wyurjds.yitao.Entity.Collection">
+      select * from collection where product_id = #{productId} and collector_id = #{collectorId}
+    </select>
+</mapper>

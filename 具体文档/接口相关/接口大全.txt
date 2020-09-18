@@ -1,0 +1,52 @@
+接口大全
+
+主页
+	获取全部大小标签
+	获取新发布的商品
+	根据标签查找商品
+	根据关键字查找商品
+	
+	收藏商品
+
+		
+发布商品页
+	上传商品信息
+	
+	修改商品信息
+	
+消息页
+	根据发送和接收消息人的id按时间排序获取全部消息   getAllNews
+	查询是否有新信息   getUnreadNews
+
+	发送消息      SendMessage
+	
+	
+我的页面
+	根据微信id查找全部发布的商品   getMyProduct
+	根据微信id查找全部收藏的商品   getMyCollection
+	根据微信id查找全部已卖出商品   getSoldCollection
+	根据微信id查找全部买到的商品   getOwnerProducts
+	根据商品id查找商品             getOneProduct
+
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

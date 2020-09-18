@@ -1,0 +1,26 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyurjds.yitao.Mapper.TopCategoryMapper">
+
+    <!--查询-->
+    <select id="queryAllTopCategory" resultType="com.wyurjds.yitao.Entity.TopCategory">
+        select * from top_category
+    </select>
+
+    <!--查询所有大分类以及其所对应的小分类-->
+    <resultMap id="BaseResultMap" type="com.wyurjds.yitao.Utils.TopCategoryExtend" >
+        <id column="top_category_id" property="topCategory.topCategoryId" jdbcType="BIGINT" />
+        <result column="top_category_name" property="topCategory.topCategoryName" jdbcType="VARCHAR" />
+        <collection property="secondCategories" ofType="com.wyurjds.yitao.Entity.SecondCategory">
+            <id column="second_category_id" property="secondCategoryId" jdbcType="BIGINT" />
+            <result column="second_category_name" property="secondCategoryName" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <select id="queryTopAndSecondCategorys" resultMap="BaseResultMap">
+        select a.top_category_id,a.top_category_name,b.second_category_id,b.second_category_name
+        from top_category a,second_category b
+        where a.top_category_id = b.top_category_id
+    </select>
+</mapper>

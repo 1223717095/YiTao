@@ -1,0 +1,128 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyurjds.yitao.Mapper.ProductsMapper">
+    <select id="getMyProduct" resultType="com.wyurjds.yitao.Entity.Products">
+        SELECT *
+        FROM products
+        WHERE seller_id=#{wxId};
+    </select>
+
+    <select id="getSoldProduct" resultType="com.wyurjds.yitao.Entity.Products">
+        SELECT *
+        FROM products
+        WHERE seller_id=#{wxId}
+        AND product_status=0;
+    </select>
+
+    <!--添加商品-->
+    <insert id="insertProduct" parameterType="com.wyurjds.yitao.Entity.Products">
+        insert into products  (second_category_id,seller_id,product_title,product_price,product_introduce,product_url,place_of_transaction)
+        values(#{secondCategoryId},#{sellerId},#{productTitle},#{productPrice},#{productIntroduce},#{productUrl},#{placeOfTransaction})
+    </insert>
+
+    <!--更新商品-->
+    <update id="updateProduct" parameterType="com.wyurjds.yitao.Entity.Products">
+        update products
+        set second_category_id = #{secondCategoryId},
+        seller_id = #{sellerId},
+        product_title = #{productTitle},
+        product_price = #{productPrice},
+        product_introduce = #{productIntroduce},
+        product_url = #{productUrl},
+        place_of_transaction = #{placeOfTransaction}
+        where product_id = #{productId}
+    </update>
+
+    <!--根据商品id查询商品-->
+    <resultMap type="com.wyurjds.yitao.Utils.ProductsExtend" id="productMap">
+        <id column="product_id" property="product.productId" />
+        <result column="second_category_id" property="product.secondCategoryId" />
+        <result column="seller_id" property="product.sellerId" />
+        <result column="product_title" property="product.productTitle" />
+        <result column="product_price" property="product.productPrice" />
+        <result column="product_introduce" property="product.productIntroduce" />
+        <result column="product_url" property="product.productUrl" />
+        <result column="product_status" property="product.productStatus" />
+        <result column="create_time" property="product.createTime" />
+        <result column="update_time" property="product.updateTime" />
+        <result column="place_of_transaction" property="product.placeOfTransaction" />
+        <result column="top_category_id" property="topCategoryId" />
+    </resultMap>
+
+    <select id="queryProductsById" resultMap="productMap">
+        select a.*,b.top_category_id from products a,second_category b
+        where a.second_category_id = b.second_category_id and product_id = #{productId};
+    </select>
+
+    <!--根据条件查询商品数量-->
+    <select id="queryProductsCount" resultType="int" parameterType="com.wyurjds.yitao.Utils.QueryObject">
+        select count(*) from products
+        <where>
+            <include refid="productConditions"></include>
+        </where>
+    </select>
+
+    <!--根据条件查询商品-->
+    <resultMap type="com.wyurjds.yitao.Entity.Products" id="productsList">
+        <id column="product_id" property="productId" />
+        <result column="second_category_id" property="secondCategoryId" />
+        <result column="seller_id" property="sellerId" />
+        <result column="product_title" property="productTitle" />
+        <result column="product_price" property="productPrice" />
+        <result column="product_introduce" property="productIntroduce" />
+        <result column="product_url" property="productUrl" />
+        <result column="product_status" property="productStatus" />
+    </resultMap>
+
+    <select id="selectProductsByCondition" resultMap="productsList">
+        select * from products
+        <where>
+            <include refid="productConditions"></include>
+        </where>
+        ORDER BY create_time desc LIMIT #{startIndex},#{pageSize}
+    </select>
+    <!--sql共同代码块-->
+    <sql id="productConditions">
+        and product_status = 1
+        <if test="secondCategoryId != null and secondCategoryId != 0">
+            AND second_category_id = #{secondCategoryId}
+        </if>
+        <if test="topCategoryId !=null and topCategoryId != 0">
+            <if test="secondCategoryId == null or secondCategoryId == 0">
+                and second_category_id in (select second_category_id from second_category where top_category_id = #{topCategoryId})
+            </if>
+        </if>
+        <if test="keyWord !=null and keyWord !=''">
+            and (product_introduce like CONCAT('%', #{keyWord},'%')
+            or product_title like CONCAT('%', #{keyWord},'%'))
+        </if>
+    </sql>
+
+
+    <!--修改商品状态-->
+    <update id="updateProductStatus">
+        update products
+        set product_status = 0
+        where product_id = #{productId}
+    </update>
+
+    <select id="getOneProduct" resultType="com.wyurjds.yitao.Entity.Products">
+        SELECT *
+        FROM products
+        WHERE product_id=#{productId};
+    </select>
+
+    <select id="productIdGetSellerId" resultType="com.wyurjds.yitao.Dto.ProductIdAndSellerId">
+        SELECT product_id,seller_id
+        FROM products
+        WHERE product_id=#{productId};
+    </select>
+
+    <update id="onOffShelves">
+        update products
+        set product_status = #{productStatus}
+        where product_id = #{productId}
+    </update>
+
+</mapper>
